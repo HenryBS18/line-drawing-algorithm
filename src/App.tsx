@@ -178,7 +178,7 @@ const App = () => {
           }
         </div>
 
-        <div className="w-full bg-slate-300 mt-8 p-5 rounded-lg max-h-[52vh] overflow-auto">
+        <div className="w-full bg-slate-300 mt-8 p-5 rounded-lg max-h-[70vh] overflow-auto">
           <h1 className="text-xl sm:text-3xl font-bold mb-3">Chart:</h1>
           {
             coordinate ? (
