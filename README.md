@@ -1,5 +1,5 @@
 # Line Drawing Algorithm
-This website is used to calculate line from point A to point B with **Basic Gradient Algorithm** and **Digital Differential Algorithm (DDA)**. Then visualize it into Cartesian Coordinates Chart.
+This website is used to calculate line from point A to point B with **Basic Gradient Algorithm** and **Digital Differential Analyzer (DDA)**. Then visualize it into Cartesian Coordinates Chart.
 
 You can access here <a href="https://line-drawing-algorithm.vercel.app" target="_blank">line-drawing-algorithm.vercel.app</a>
 
