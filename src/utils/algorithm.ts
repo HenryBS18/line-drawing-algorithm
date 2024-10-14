@@ -1,4 +1,4 @@
-import { BasicResult, DDAResult } from "../types"
+import { BasicResult, BressenhamResult, DDAResult } from "../types"
 
 interface AlgorithmProps {
   x1: number
@@ -73,7 +73,7 @@ export const basicAlgorithm = ({ x1, y1, x2, y2 }: AlgorithmProps): BasicResult[
   return result
 }
 
-export const DDAAlgorithm = ({ x1, y1, x2, y2 }: AlgorithmProps) => {
+export const DDAAlgorithm = ({ x1, y1, x2, y2 }: AlgorithmProps): DDAResult[] => {
   const result: DDAResult[] = []
   result.push({
     k: null,
@@ -148,6 +148,94 @@ export const DDAAlgorithm = ({ x1, y1, x2, y2 }: AlgorithmProps) => {
     roundX = Math.round(x)
     roundY = Math.round(y)
     i++
+  }
+
+  return result
+}
+
+export const bressenhamAlgorithm = ({ x1, y1, x2, y2 }: AlgorithmProps): BressenhamResult[] => {
+  const dx = x2 - x1
+  const dy = y2 - y1
+  const p0 = (2 * dy) - dx
+  let pk = p0
+  let xk = x1
+  let yk = y1
+  let result = []
+
+  result.push({
+    k: null,
+    pk: null,
+    xk: xk,
+    yk: yk,
+  })
+
+  let k = 0
+
+  if (xk < x2) {
+    while (xk < x2) {
+      xk += 1
+
+      if (pk < 0) {
+        result.push({
+          k,
+          pk,
+          xk,
+          yk
+        })
+
+        pk = pk + (2 * dy)
+      } else {
+        if (y1 < y2) {
+          yk += 1
+        } else {
+          yk -= 1
+        }
+
+        result.push({
+          k,
+          pk,
+          xk,
+          yk
+        })
+
+        pk = pk + ((2 * dy) - (2 * dx))
+      }
+      k += 1
+    }
+
+    return result
+  }
+
+  while (xk > x2) {
+    xk -= 1
+
+    if (pk < 0) {
+      result.push({
+        k,
+        pk,
+        xk,
+        yk
+      })
+
+      pk = pk + (2 * dy)
+    } else {
+      if (y1 < y2) {
+        yk += 1
+      } else {
+        yk -= 1
+      }
+
+      result.push({
+        k,
+        pk,
+        xk,
+        yk
+      })
+
+      pk = pk + ((2 * dy) - (2 * dx))
+    }
+
+    k += 1
   }
 
   return result

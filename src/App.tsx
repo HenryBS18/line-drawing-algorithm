@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react"
-import { FormData, BasicResult, ErrorState, DDAResult, Coordinate } from "./types"
-import { basicAlgorithm, DDAAlgorithm } from "./utils/algorithm"
+import { FormData, BasicResult, ErrorState, DDAResult, Coordinate, BressenhamResult } from "./types"
+import { basicAlgorithm, bressenhamAlgorithm, DDAAlgorithm } from "./utils/algorithm"
 import { BasicTable, Chart, DDATable, Input } from "./components"
+import BressenhamTable from "./components/BressenhamTable"
 
 const App = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -11,7 +12,7 @@ const App = () => {
     y2: 0,
     algorithm: "basic",
   })
-  const [result, setResult] = useState<BasicResult[] | DDAResult[] | null>(null)
+  const [result, setResult] = useState<BasicResult[] | DDAResult[] | BressenhamResult[] | null>(null)
   const [error, setError] = useState<ErrorState>({
     isError: false,
     message: ''
@@ -36,7 +37,7 @@ const App = () => {
     if (type === "radio") {
       setFormData((prevData) => ({
         ...prevData,
-        algorithm: id as "basic" | "dda",
+        algorithm: id as "basic" | "dda" | "bressenham",
       }))
     } else {
       setFormData((prevData) => ({
@@ -56,7 +57,7 @@ const App = () => {
         x2: parseFloat(formData.x2 as unknown as string),
         y2: parseFloat(formData.y2 as unknown as string),
       }
-      let result: BasicResult[] | DDAResult[] = []
+      let result: BasicResult[] | DDAResult[] | BressenhamResult[] = []
 
       if (formData.algorithm === 'basic') {
         result = basicAlgorithm(form)
@@ -69,7 +70,7 @@ const App = () => {
           })
         }
         setCoordinate(coord)
-      } else {
+      } else if (formData.algorithm === 'dda') {
         result = DDAAlgorithm(form)
 
         const coord: Coordinate[] = []
@@ -83,8 +84,20 @@ const App = () => {
           })
         }
         setCoordinate(coord)
-      }
+      } else {
+        result = bressenhamAlgorithm(form)
+        
+        const coord: Coordinate[] = []
 
+        for (const res of result) {
+          coord.push({
+            x: res.xk,
+            y: res.yk
+          })
+        }
+        setCoordinate(coord)
+      }
+      
       setResult(result)
 
       setTimeout(() => {
@@ -155,6 +168,10 @@ const App = () => {
                 <input type="radio" name="alg" id="dda" className="w-[18px] h-[18px]" onChange={handleInputChange} checked={formData.algorithm === "dda"} />
                 <label htmlFor="dda" className="text-md font-bold">Digital Differential Analyzer (DDA)</label>
               </div>
+              <div className="flex items-center gap-x-1">
+                <input type="radio" name="alg" id="bressenham" className="w-[18px] h-[18px]" onChange={handleInputChange} checked={formData.algorithm === "bressenham"} />
+                <label htmlFor="bressenham" className="text-md font-bold">Bressenham Algorithm</label>
+              </div>
             </div>
           </div>
 
@@ -172,8 +189,10 @@ const App = () => {
               <p className="text-2xl">{error.message}</p>
             ) : result ? formData.algorithm === 'basic' ? (
               <BasicTable result={result as BasicResult[]} />
-            ) : (
+            ) : formData.algorithm === 'dda' ? (
               <DDATable result={result as DDAResult[]} />
+            ) : (
+              <BressenhamTable result={result as BressenhamResult[]} />
             ) : null
           }
         </div>

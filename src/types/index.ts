@@ -3,7 +3,7 @@ export interface FormData {
   y1: number
   x2: number
   y2: number
-  algorithm: "basic" | "dda"
+  algorithm: "basic" | "dda" | "bressenham"
 }
 
 export interface BasicResult {
@@ -31,4 +31,11 @@ export interface DDAResult {
 export interface Coordinate {
   x: number
   y: number
+}
+
+export interface BressenhamResult {
+  k: number | null
+  pk: number | null
+  xk: number
+  yk: number
 }
